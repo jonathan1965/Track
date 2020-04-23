@@ -160,8 +160,8 @@
           <tr>
             <td style="text-align:center;width: 50px;">{{$entry->id}}</td>
             <td style="width: 50px;">{{$entry->invoice_number}}</td>
-            <td >{{$entry->vehicle}}</td>
-            <td>{{$entry->client}}</td>
+            <td >{{$entry->vehicle->plate}}</td>
+            <td>{{$entry->client->name}}</td>
             <td class="text-center">{{number_format($entry->amount)}}</td>
             <td>{{$entry->service}}</td>
             <td class="text-center">{{number_format($entry->odometer_reading)}}</td>

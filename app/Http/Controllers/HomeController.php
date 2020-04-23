@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\User;
 use App\Entry;
+use App\Client;
 use App\Reminder;
 use Illuminate\Http\Request;
-use DB;
+
 class HomeController extends Controller
 {
     /**
@@ -37,7 +39,9 @@ class HomeController extends Controller
         if(auth()->user()->usertype == 'admin'){
             $entries = Entry::all();
         }else{
-            $entries = DB::table('entries')->where('client',$client)->get();
+            $client = Client::where('id',$client->id)->first();
+            $entries = $client->entries;
+            // $entries = DB::table('entries')->where('client',$client)->get();
         }
 
         $user = auth()->user()->usertype;
