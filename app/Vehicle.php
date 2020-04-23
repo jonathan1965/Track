@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     //
-    protected $fillable = ['client', 'type', 'make', 'model', 'plate'];
+    protected $fillable = ['client_id', 'type', 'make', 'model', 'plate'];
 
     public function tasks(){
  
@@ -18,5 +18,10 @@ class Vehicle extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function Entries()
+    {
+        return $this->hasMany(Entry::class);
     }
 }

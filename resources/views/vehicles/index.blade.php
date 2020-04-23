@@ -110,15 +110,15 @@
         <tbody>
         	@foreach($vehicles as $vehicle)
             <tr>
-                <td class="text-center">{{$vehicle->client}}</td>
+                <td class="text-center">{{$vehicle->client->name}}</td>
                 <td class="text-center">{{$vehicle->type}}</td>
                 <td class="text-center">{{$vehicle->make}}</td>
                 <td class="text-center">{{$vehicle->model}}</td>
                 <td class="text-center">{{$vehicle->plate}}</td>
                 <td style="text-align: center; width:10%;"><!-- <a href="#"><i class="fas fa-trash text-danger text-center"></i></a> -->
-                  <button style=" width:40%;" class=" btn-primary-outline"  data-myclient="{{$vehicle->client}}" data-mytype="{{$vehicle->type}}" data-mymake="{{$vehicle->make}}" data-mymodel="{{$vehicle->model}}" data-myplate="{{$vehicle->plate}}" data-catid={{$vehicle->id}} data-toggle="modal" data-target="#edit"><i class="fa fa-edit text-success"></i></button>
+                  <button style=" width:40%;" class=" btn-primary-outline"  data-myclient="{{$vehicle->client->name}}" data-mytype="{{$vehicle->type}}" data-mymake="{{$vehicle->make}}" data-mymodel="{{$vehicle->model}}" data-myplate="{{$vehicle->plate}}" data-catid="{{$vehicle->id}}" data-toggle="modal" data-target="#edit"><i class="fa fa-edit text-success"></i></button>
                   
-                  <button style=" width:40%;" class=" btn-primary-outline"  data-catid={{$vehicle->id}} data-toggle="modal" data-target="#delete"><i class="fa fa-trash text-danger"></i></button>
+                  <button style=" width:40%;" class=" btn-primary-outline"  data-catid="{{$vehicle->id}}" data-toggle="modal" data-target="#delete"><i class="fa fa-trash text-danger"></i></button>
                 </td>
                 @if($vehicle->status == 'open')
             <td class="text-center">
@@ -135,7 +135,7 @@
          @endif 
             </tr>
             
-            @endforeach
+           @endforeach
         </tbody>
         <tfoot>
            

@@ -38,7 +38,9 @@ class EntryController extends Controller
         if(auth()->user()->usertype == 'admin'){
             $entries = Entry::all();
         }else{
-            $entries = DB::table('entries')->where('client',$client)->get();
+            $client = Client::where('id',$client->id)->first();
+            $entries = $client->entries;
+            // $entries = DB::table('entries')->where('client',$client)->get();
         }
         
         $user = User::where('client_id',Auth::user()->client_id)->first();
@@ -120,10 +122,12 @@ class EntryController extends Controller
         }
         // Entry::create($request->all());
         // return back()->with('success', 'Saved Successfully');
+        $client = Client::where('name',$request->client)->first();
+        $vehicle = Vehicle::where('plate',$request->vehicle)->first();
         $entry = new Entry();
         
-        $entry->client = $request->input('client');
-        $entry->vehicle = $request->input('vehicle');  
+        $entry->client_id = $client->id;
+        $entry->vehicle_id = $vehicle->id;  
         $entry->service = $request->input('service'); 
         $entry->location= $request->input('location');
         $entry->comments= $request->input('comments');
@@ -137,7 +141,7 @@ class EntryController extends Controller
         $entry->image=$fileNameToStore;
         $entry->file= $fileNameToStore1;
         $entry->save();
-        Mail::to('email@email.com')->send(new SendMail());
+        // Mail::to('email@email.com')->send(new SendMail());
         return back()->with('success', 'Saved Successfully');
     }
 
@@ -177,9 +181,56 @@ class EntryController extends Controller
             'vehicle' => 'required',
 
         ]);
-        
+        $fileNameToStore=0;
+        $fileNameToStore1=0;
+        if ($request->hasFile('image'))
+        {
+            //get filename with extension
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            // get just file name
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            //get just extention
+            $extension = $request->file('image')->getClientOriginalExtension();
+            //FILE NAME 
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            //fupload Image
+            $path = $request->file('image')->storeAs('public/images', $fileNameToStore);
+            
+                // $uploadedImage = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
+                // $destinationPath = public_path('public/images');
+                // $uploadedImage->move($destinationPath, $imageName);
+                // $image->imagePath = $destinationPath . $imageName;
+        }
+
+        if($request->hasFile('file'))
+        {
+            
+            $filenameWithExt1=$request->file('file')->getClientOriginalName();
+            $filename1=pathinfo  ($filenameWithExt1,PATHINFO_FILENAME);
+            $extension1=$request->file('file')->getClientOriginalExtension();
+            $fileNameToStore1= $filename1.'_'.time().'.'. $extension1;
+            $path1= $request->file('file')->storeAs('/public/files',$fileNameToStore1);
+
+        }
+        $client = Client::where('name',$request->client)->first();
+        $vehicle = Vehicle::where('plate',$request->vehicle)->first();
         $entry = Entry::findOrFail($request->entry_id);
-        $entry->update($request->all());
+        $entry->client_id = $client->id;
+        $entry->vehicle_id = $vehicle->id;  
+        $entry->service = $request->input('service'); 
+        $entry->location= $request->input('location');
+        $entry->comments= $request->input('comments');
+        $entry->driver=$request->input('driver'); 
+        $entry->odometer_reading= $request->input('odometer_reading');
+        $entry->fuel=$request->input('fuel');  
+        $entry->service_date= $request->input('service_date');         
+        $entry->amount = $request->input('amount');
+        $entry->invoice_number=$request->input('invoice_number');
+        $entry->driver=$request->input('driver');
+        $entry->image=$fileNameToStore;
+        $entry->file= $fileNameToStore1;
+        $entry->save();
        
         return back()->with('success', 'edited successfully');
     }

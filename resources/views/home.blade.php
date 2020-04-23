@@ -14,7 +14,9 @@ use App\Entry;
     //$entry = Entry::all();
     $vehicle = Vehicle::all();
     if($usertype == 'user'){
-    $vehicles = DB::table('vehicles')->where('vehicles.client', $client)->count();
+      $client = Client::where('id',$client->id)->first();
+      $vehicles = $client->vehicles->count();
+    //  $vehicles = DB::table('vehicles')->where('vehicles.client', $client)->count();
     }
     
 ?>
@@ -179,8 +181,8 @@ use App\Entry;
           @foreach($entries as $entry)
             <tr>
               <td>{{$entry->id}}</td>
-               <td>{{$entry->client}}</td>
-                <td>{{$entry->vehicle}}</td>
+               <td>{{$entry->client->name}}</td>
+                <td>{{$entry->vehicle->plate}}</td>
                 <td>{{$entry->service}}</td>
                 <th>{{number_format($entry->amount)}}</th>
                 <th>{{$entry->created_at}}</th>
