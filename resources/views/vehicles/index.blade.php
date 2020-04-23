@@ -98,7 +98,7 @@
                 <table id="" class="display" style="width:100%; padding-top: 20px;" data-page-length='25'>
         <thead>
             <tr>
-               <th class="text-center">Client</th>
+               {{-- <th class="text-center">Client</th> --}}
                <th class="text-center">Type</th>
                <th class="text-center">Make</th>
                <th class="text-center">Model</th>
@@ -110,7 +110,7 @@
         <tbody>
         	@foreach($vehicles as $vehicle)
             <tr>
-                <td class="text-center">{{$vehicle->client}}</td>
+                {{-- <td class="text-center">{{$vehicle->client}}</td> --}}
                 <td class="text-center">{{$vehicle->type}}</td>
                 <td class="text-center">{{$vehicle->make}}</td>
                 <td class="text-center">{{$vehicle->model}}</td>
