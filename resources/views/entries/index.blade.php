@@ -28,10 +28,8 @@
           <div class="form-group">
             <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
             <select class="form-control" name="client" id="client">
-              <option disabled="" selected="">Choose Option</option>
-              @foreach($clients as $client)
-              <option value="{{$client->name}}">{{$client->name}}</option>
-              @endforeach
+              <!-- <option disabled="" selected="">Choose Option</option> -->
+              <option value="{{$clients->name}}">{{$clients->name}}</option>
             </select>
           </div>
           <div class="form-group">
@@ -248,10 +246,10 @@
               <div class="form-group">
                 <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                 <select class="form-control" name="client" id="client">
-                  <option disabled="" selected="">Choose Option</option>
-                  @foreach($clients as $client)
-                  <option value="{{$client->name}}">{{$client->name}}</option>
-                  @endforeach
+                  <!-- <option disabled="" selected="">Choose Option</option> -->
+              
+                  <option value="{{$clients->name}}">{{$clients->name}}</option>
+              
                 </select>
               </div>
               <div class="form-group">

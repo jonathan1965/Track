@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB; 
+use App\User;
 use App\Entry;
 use App\Client;
 use App\Service;
@@ -10,6 +11,7 @@ use App\Vehicle;
 use App\Location;
 use App\Mail\SendMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,13 +41,15 @@ class EntryController extends Controller
             $entries = DB::table('entries')->where('client',$client)->get();
         }
         
-        $clients = Client::all();
+        $user = User::where('client_id',Auth::user()->client_id)->first();
+        $clients = $user->client;
         $services = Service::all();
-        $vehicles = Vehicle::all();
+        $vehicles = Vehicle::where('client_id',$clients->id)->get();
         $locations = Location::all();
         $usertype = auth()->user()->usertype;
         
         if($usertype == 'admin' || $usertype == 'user'){
+            // return $clients;
             return view('entries.index')->with('entries', $entries)->with('clients', $clients)->with('services', $services)->with('vehicles', $vehicles)->with('locations', $locations);
         }
         else{
