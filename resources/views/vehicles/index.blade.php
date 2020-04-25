@@ -54,9 +54,9 @@
               <label for="client"><i class="fab fa-cuttlefish text-primary"></i> Client</label>
               <select class="form-control" name="client">
                 <option disabled="" selected="">Choose Option</option>
-                @foreach($clients as $client)
-                <option value="{{$client->name}}">{{$client->name}}</option>
-                @endforeach
+                
+                <option value="{{$clients->name}}">{{$clients->name}}</option>
+                
               </select>
             </div>
             <div class="form-group">
@@ -98,7 +98,7 @@
                 <table id="" class="display" style="width:100%; padding-top: 20px;" data-page-length='25'>
         <thead>
             <tr>
-               {{-- <th class="text-center">Client</th> --}}
+               <th class="text-center">Client</th>
                <th class="text-center">Type</th>
                <th class="text-center">Make</th>
                <th class="text-center">Model</th>
@@ -192,9 +192,9 @@
               <label for="client"><i class="fa fa-building"></i> Client</label>
               <select class="form-control" name="client" id="client">
                 <option disabled="" selected="">Choose Option</option>
-                @foreach($clients as $client)
-                <option value="{{$client->name}}">{{$client->name}}</option>
-                @endforeach
+                
+                <option value="{{$clients->ame}}">{{$clients->name}}</option>
+               
               </select>
             </div>
             <div class="form-group">
