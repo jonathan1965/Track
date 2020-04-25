@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Vehicle;
-use App\Client;
-use App\Task;
 use DB;
+use App\Task;
+use App\Client;
+use App\Vehicle;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class VehiclesController extends Controller
 {
     /**
@@ -27,8 +29,9 @@ class VehiclesController extends Controller
     {
         // $client = auth()->user()->client;
         // $vehicles = DB::table('vehicles')->leftJoin('tasks', 'vehicles.id', '=', 'tasks.vehicle_id')->select('vehicles.*', 'tasks.status')->where('vehicles.client', $client)->get();
-        $clients = Client::all();
-        $vehicles = Vehicle::all();
+        $user = Auth::user();
+        $clients = $user->client;
+        $vehicles = Vehicle::where('client_id',$clients->id)->get();
         $usertype = auth()->user()->usertype;
          if($usertype == 'admin' || $usertype == 'user'){
             return view('vehicles.index')->with('vehicles', $vehicles)->with('clients', $clients);

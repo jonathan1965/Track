@@ -54,9 +54,9 @@
               <label for="client"><i class="fab fa-cuttlefish text-primary"></i> Client</label>
               <select class="form-control" name="client">
                 <option disabled="" selected="">Choose Option</option>
-                @foreach($clients as $client)
-                <option value="{{$client->name}}">{{$client->name}}</option>
-                @endforeach
+                
+                <option value="{{$clients->name}}">{{$clients->name}}</option>
+                
               </select>
             </div>
             <div class="form-group">
@@ -192,9 +192,9 @@
               <label for="client"><i class="fa fa-building"></i> Client</label>
               <select class="form-control" name="client" id="client">
                 <option disabled="" selected="">Choose Option</option>
-                @foreach($clients as $client)
-                <option value="{{$client->name}}">{{$client->name}}</option>
-                @endforeach
+                
+                <option value="{{$clients->name}}">{{$clients->name}}</option>
+                
               </select>
             </div>
             <div class="form-group">

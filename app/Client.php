@@ -23,4 +23,14 @@ class Client extends Model
     {
         return $this->hasMany(Entry::class);
     }
+
+    public function reminders()
+    {
+        return $this->hasMany(Reminder::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

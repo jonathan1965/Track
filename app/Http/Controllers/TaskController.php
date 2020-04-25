@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Task;
 use App\User;
 use App\Vehicle;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -17,12 +18,12 @@ class TaskController extends Controller
      */
     public function index()
     {   
-        $name = auth()->user()->name;
-        $vehicles = Vehicle::all();
-        $client = auth()->user()->client;
+        $user = auth()->user();
+        $client = $user->client;
+        $vehicles = $client->vehicles;
         $users = User::all();
         $clientUsers = DB::table('users')->where('client', $client);
-        $tasks = DB::table('tasks')->where('requested_to',$name)->get();
+        $tasks = $client->tasks;
         $usertype = auth()->user()->usertype;
          if($usertype == 'admin'){
             return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles);
@@ -57,8 +58,9 @@ class TaskController extends Controller
             'task' => 'required',
             'vehicles' => 'required',
            ]);
-           $vehicle_plate = $request->input('vehicles');
-           $vehicle_id = Vehicle::where('plate',$vehicle_plate)->first();
+           $user = Auth::user();
+           $client = $user->client;
+           $vehicle = Vehicle::where('plate',$request->input('vehicles'))->first();
            $tasks = new Task();
         
            $tasks->task = $request->input('task');
@@ -66,8 +68,8 @@ class TaskController extends Controller
            $tasks->requested_to = $request->input('requested_to'); 
            $tasks->due_date= $request->input('due_date');
            $tasks->closed_date= $request->input('closed_date');
-           $tasks->vehicle_id = $vehicle_id->id;
-           $tasks->vehicles = $request->input('vehicles');
+           $tasks->vehicle_id = $vehicle->id;
+           $tasks->client_id = $client->id;
            $tasks->status=$request->input('status'); 
            $tasks->save();
         return back()->with('success', 'Saved Successfully');

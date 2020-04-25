@@ -35,8 +35,8 @@
                 <td>{{$reminder->topic}}</td>
                 <td>{{$reminder->reminder_by}}</td>
                 <td>{{$reminder->reminder_to}}</td>
-                <td>{{$reminder->client}}</td>
-                <td>{{$reminder->vehicle}}</td>
+                <td>{{$reminder->client->name}}</td>
+                <td>{{$reminder->vehicle->plate}}</td>
                 <td>{{$reminder->status}}</td>
                 <td>{{$reminder->created_at}}</td>
                 <td>{{$reminder->due_date}}</td>
@@ -99,9 +99,9 @@
                         <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                         <select class="form-control" name="client" id="client">
                           <option disabled="" selected="">Choose Option</option>
-                          @foreach($clients as $client) --}}
+                        
                         <option value="{{$client->name}}">{{$client->name}}</option>
-                          @endforeach
+                          
                         </select>
                       </div>
                       
@@ -221,9 +221,9 @@
                     <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                     <select class="form-control" name="client" id="client">
                       <option disabled="" selected="">Choose Option</option>
-                      @foreach($clients as $client) --}}
+                    
                     <option value="{{$client->name}}">{{$client->name}}</option>
-                      @endforeach
+                    
                     </select>
                   </div>
                   </div>
