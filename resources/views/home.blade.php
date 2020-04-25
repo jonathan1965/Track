@@ -9,12 +9,12 @@ use App\Entry;
     $services = Service::all()->count();
     $vehicles = Vehicle::all()->count();
     $clients = Client::all()->count();
-    $tasks = Task::all()->where('requested_to', auth()->user()->name)->count();
+    $tasks = $client->tasks->count();
     // $tasks = Task::all()->where('status','open',auth()->user()->name)->count();
     //$entry = Entry::all();
     $vehicle = Vehicle::all();
     if($usertype == 'user'){
-      $client = Client::where('id',$client->id)->first();
+      // $client = Client::where('id',$client->id)->first();
       $vehicles = $client->vehicles->count();
     //  $vehicles = DB::table('vehicles')->where('vehicles.client', $client)->count();
     }

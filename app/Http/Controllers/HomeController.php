@@ -28,11 +28,12 @@ class HomeController extends Controller
      */
     public function index()
     {  
-        $name = auth()->user()->name;
-        $expiredReminders= Reminder::where('due_date', '<', today())->where('reminder_to',$name)->count();
-        $remindersDueToday = Reminder::where('due_date','=',today())->where('reminder_to',$name)->count();
-        $remindersDueThisWeek = Reminder::where('due_date','>',today()->startOfDay())->where('due_date', '<', today()->addWeek())->where('reminder_to',$name)->count();
-        $remindersDueThisMonth = Reminder::where('due_date','>',today()->startOfDay())->where('due_date', '<', today()->addMonth())->where('reminder_to',$name)->count();
+        $user = auth()->user();
+        $client = $user->client;
+        $expiredReminders= Reminder::where('due_date', '<', today())->where('client_id',$client->id)->count();
+        $remindersDueToday = Reminder::where('due_date','=',today())->where('client_id',$client->id)->count();
+        $remindersDueThisWeek = Reminder::where('due_date','>',today()->startOfDay())->where('due_date', '<', today()->addWeek())->where('client_id',$client->id)->count();
+        $remindersDueThisMonth = Reminder::where('due_date','>',today()->startOfDay())->where('due_date', '<', today()->addMonth())->where('client_id',$client->id)->count();
         
         $client = auth()->user()->client;
         //
