@@ -4,20 +4,8 @@ use App\Service;
 use App\Client;
 use App\Task;
 use App\Entry;
-    $usertype = auth()->user()->usertype;    
-    $client = auth()->user()->client;
-    $services = Service::all()->count();
-    $vehicles = Vehicle::all()->count();
-    $clients = Client::all()->count();
-    $tasks = $client->tasks->count();
-    // $tasks = Task::all()->where('status','open',auth()->user()->name)->count();
-    //$entry = Entry::all();
-    $vehicle = Vehicle::all();
-    if($usertype == 'user'){
-      // $client = Client::where('id',$client->id)->first();
-      $vehicles = $client->vehicles->count();
-    //  $vehicles = DB::table('vehicles')->where('vehicles.client', $client)->count();
-    }
+    
+    
     
 ?>
 {{-- @if(Auth::user()->usertype == 'admin' || 'user') --}}
@@ -82,7 +70,7 @@ use App\Entry;
                   </div>
                 </div></a>
               </div>
-              @if($usertype == 'admin')
+              @if($userType == 'admin')
               <div class="col-xl-3 col-sm-6 p-2">
                 <a href="/clients" style="text-decoration: none;"> <div class="card card-common">
                   <div class="card-body">
