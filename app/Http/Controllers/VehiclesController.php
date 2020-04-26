@@ -91,7 +91,8 @@ class VehiclesController extends Controller
     {
         //
         $vehicle = Vehicle::find($id);
-        return view('vehicles.show')->with('vehicle', $vehicle)->with('tasks', $vehicle->tasks);
+        $tasks = $vehicle->tasks;
+        return view('vehicles.show')->with('tasks', $vehicle->tasks);
     }
 
     /**
