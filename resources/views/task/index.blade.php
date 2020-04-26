@@ -152,7 +152,7 @@
           {{-- <td ><a href="public/images/{{$entry->image}}" target="_blank">{{$entry->image}}</a> </td>
           <td > <a href="public/files/{{$entry->file}}" target="_blank">{{$entry->file}}</a> </td> --}}
           <td style="text-align: center; width:10%;"> 
-            <button style=" width:40%;" class=" btn-primary-outline"  data-toggle="modal" data-target="#edit" data-task_id={{$task->id}} data-mytask="{{$task->task}}" data-myrequested_by="{{$task->requested_by}}" data-myrequested_to="{{$task->requested_to}}" data-myvehicles="{{$task->vehicles}}" data-mydue_date="{{$task->due_date}}" data-myclosed_date="{{$task->closed_date}}" data-mystatus="{{$task->status}}"><i class="fa fa-edit text-success" style="font-size:12px"></i></button>
+            <button style=" width:40%;" class=" btn-primary-outline"  data-toggle="modal" data-target="#edit" data-task_id={{$task->id}} data-mytask="{{$task->task}}" data-myrequested_by="{{$task->requested_by}}" data-myrequested_to="{{$task->requested_to}}" data-myvehicles="{{$task->vehicle->plate}}" data-mydue_date="{{$task->due_date}}" data-myclosed_date="{{$task->closed_date}}" data-mystatus="{{$task->status}}"><i class="fa fa-edit text-success" style="font-size:12px"></i></button>
             
             <button style="width:40%;" class=" btn-primary-outline" data-task_id={{$task->id}} data-toggle="modal"  data-target="#delete"><i class="fa fa-trash text-danger" style="font-size:12px"></i></button> 
           
