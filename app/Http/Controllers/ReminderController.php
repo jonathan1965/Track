@@ -18,20 +18,21 @@ class ReminderController extends Controller
      */
     public function index()
     {
-        $name = auth()->user()->name;
-        $vehicles = Vehicle::all();
-        $clients = Client::all();
+        $user = auth()->user();
+        $client = $user->client;
+        $vehicles = $client->vehicles;
+        // $clients = Client::all();
         $users= User::all();
-        $reminders= Reminder::orderBy('id', 'desc')->where('reminder_to',$name)->get();
+        $reminders= $client->reminders;
       
         $usertype = auth()->user()->usertype;
          if($usertype == 'admin' || $usertype == 'user'){
-            return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('clients', $clients)->with('users', $users);
+            return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('client', $client)->with('users', $users);
         }
         else{
             return view('other');
         }
-        return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('clients', $clients)->with('users', $users);
+        return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('client', $client)->with('users', $users);
 
        
     }
@@ -59,7 +60,18 @@ class ReminderController extends Controller
             'due_date' => 'required',
             'reminder_to' => 'required'
         ]);
-        Reminder::create($request->all());
+        $user = auth()->user();
+        $client = $user->client;
+        $vehicle = Vehicle::where('plate',$request->vehicle)->first();
+        Reminder::create([
+            'client_id' => $client->id,
+            'vehicle_id' => $vehicle->id,
+            'reminder_by' => $request->reminder_by,
+            'reminder_to' => $request->reminder_to,
+            'status' => $request->status,
+            'due_date' => $request->due_date,
+            'odometer' => $request->odometer
+        ]);
         return back()->with('success','reminder created');
     }
 

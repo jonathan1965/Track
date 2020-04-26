@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reminder extends Model
 {
-    protected $fillable = ['topic', 'reminder_by', 'reminder_to', 'client','vehicle', 'status', 'due_date', 'odometer'];
+    protected $fillable = ['client_id','vehicle_id','topic', 'reminder_by', 'reminder_to', 'client','vehicle', 'status', 'due_date', 'odometer'];
 
 
     public function isDue(){
@@ -16,6 +16,16 @@ class Reminder extends Model
            return true;
        }
        return false;
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
     }
 
 }

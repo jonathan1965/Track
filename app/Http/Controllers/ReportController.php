@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Task;
+use App\Entry;
 use App\Client;
 use App\Service;
-use App\Entry;
 use App\Vehicle;
-use DB;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -27,7 +28,8 @@ class ReportController extends Controller
     {   
          $tasks = Task::all();
          $vehicles = Vehicle::all();
-        $clients = Client::all();
+         $user = Auth::user();
+         $clients = $user->client;
         $services = Service::all();
     return view('report.index')->with('clients', $clients)->with('vehicles',$vehicles)->with('services',$services);;
       //dd($entries = DB::table("entries")->get(["vehicle","created_at","service"]));
@@ -101,7 +103,8 @@ class ReportController extends Controller
 
     public function getVehicles(Request $request, $client)    
     {
-        $vehicles = DB::table("vehicles")->where("client",$client);
+        $client = Client::where('name',$client)->first();
+        $vehicles = $client->vehicles;
         
         if($request->startingDate){
             $startingDate = Carbon::parse($request->startingDate);
@@ -112,13 +115,13 @@ class ReportController extends Controller
             $endingDate = Carbon::parse($request->endingDate);
             $vehicles = $vehicles->where('created_at', '<=',$endingDate);
         }
-        $vehicles = $vehicles->pluck("client","plate");
+        $vehicles = $vehicles->pluck("client_id","plate");
         return json_encode($vehicles);
     }
     public function getEntries(Request $request, $plate)    
     {
-       
-        $entries = DB::table("entries")->where("vehicle",$plate);
+        $vehicle = Vehicle::where('plate',$plate)->first();
+        $entries = $vehicle->entries;
 
         if($request->startingDate){
             $startingDate = Carbon::parse($request->startingDate);
@@ -130,7 +133,7 @@ class ReportController extends Controller
             $entries = $entries->where('created_at', '<=',$endingDate);
         }
 
-        $entries = $entries->pluck("vehicle","service");
+        $entries = $entries->pluck("vehicle_id","service");
             //dd($entries = DB::table("entries")->get(["vehicle","created_at","service"]));
         return json_encode($entries);
           
@@ -138,9 +141,10 @@ class ReportController extends Controller
 
     public function calculateSum(Request $request, $plate)    
     {
+        $vehicle = Vehicle::where('plate',$plate)->first();
         $entries = DB::table('entries')
                 ->select('service', DB::raw('sum(amount) as totalAmount'))
-                ->where("vehicle",$plate);
+                ->where("vehicle_id",$vehicle->id);
                 
                 if($request->startingDate){
                     $startingDate = Carbon::parse($request->startingDate);

@@ -193,8 +193,8 @@
               <select class="form-control" name="client" id="client">
                 <option disabled="" selected="">Choose Option</option>
                 
-                <option value="{{$clients->ame}}">{{$clients->name}}</option>
-               
+                <option value="{{$clients->name}}">{{$clients->name}}</option>
+                
               </select>
             </div>
             <div class="form-group">

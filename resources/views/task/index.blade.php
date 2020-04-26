@@ -146,7 +146,7 @@
           <td style="width: 50px;">{{$task->task}}</td>
           <td class="text-center">{{$task->requested_by}}</td>
           <td class="text-center">{{$task->requested_to}}</td>
-          <td class="text-center">{{$task->vehicles}}</td>
+          <td class="text-center">{{$task->vehicle->plate}}</td>
           <td class="text-center">{{$task->due_date}}</td>
           <td class="text-center">{{$task->closed_date}}</td>
           {{-- <td ><a href="public/images/{{$entry->image}}" target="_blank">{{$entry->image}}</a> </td>

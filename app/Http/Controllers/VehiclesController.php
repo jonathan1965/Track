@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Task;
-use App\User;
 use App\Client;
 use App\Vehicle;
 use Illuminate\Http\Request;
@@ -30,9 +29,8 @@ class VehiclesController extends Controller
     {
         $client = auth()->user()->client;
         // $vehicles = DB::table('vehicles')->leftJoin('tasks', 'vehicles.id', '=', 'tasks.vehicle_id')->select('vehicles.*', 'tasks.status')->where('vehicles.client', $client)->get();
-        $user = User::where('client_id',Auth::user()->client_id)->first();
+        $user = Auth::user();
         $clients = $user->client;
-       
         $vehicles = Vehicle::where('client_id',$clients->id)->get();
         $usertype = auth()->user()->usertype;
          if($usertype == 'admin' || $usertype == 'user'){     

@@ -20,8 +20,13 @@ class Vehicle extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function Entries()
+    public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    public function reminders()
+    {
+        return $this->hasMany(Reminder::class);
     }
 }

@@ -13,12 +13,6 @@
                 <button type="button" class="btn btn-info btn-gb" data-toggle="modal" data-target="#myModal">Create Task</button>
                 
 
-
-
-
-
-                
-
 <div class="table-responsive-sm">
   <table id="examples" class="display" class="table table-striped table-bordered">
     <thead>
@@ -43,7 +37,7 @@
           <td style="width: 50px;">{{$task->task}}</td>
           <td class="text-center">{{$task->requested_by}}</td>
           <td class="text-center">{{$task->requested_to}}</td>
-          <td class="text-center">{{$task->vehicles}}</td>
+          <td class="text-center">{{$task->vehicle->plate}}</td>
           <td class="text-center">{{$task->due_date}}</td>
           <td class="text-center">{{$task->closed_date}}</td>
           {{-- <td ><a href="public/images/{{$entry->image}}" target="_blank">{{$entry->image}}</a> </td>
