@@ -56,7 +56,7 @@ class HomeController extends Controller
         $vehicle = Vehicle::all();
         $vehicles = Vehicle::all()->count();
         $clients = Client::all()->count();
-        $tasks = Task::all()->count();
+        $tasks = Task::where('status','open')->count();
         }
         if($userType == 'other'){
             return view('other');
