@@ -27,24 +27,24 @@ class ReportController extends Controller
     public function index()
     {   
         $usertype = auth()->user()->usertype;
-    if( $usertype == 'admin')
-        {
-        $tasks = Task::all();
-        $vehicles = Vehicle::all();
-        $clients = client::all();
-        $services = Service::all(); 
-        }
-    if($usertype == 'user')
-        {
-        $tasks = Task::all();
-        $vehicles = Vehicle::all();
-        $user = Auth::user();
-        $clients = $user->client;
-        $services = Service::all();
-        }
-         
-    return view('report.index')->with('clients', $clients)->with('vehicles',$vehicles)->with('services',$services);;
-      //dd($entries = DB::table("entries")->get(["vehicle","created_at","service"]));
+        if( $usertype == 'admin')
+            {
+            $tasks = Task::all();
+            $vehicles = Vehicle::all();
+            $clients = client::all();
+            $services = Service::all(); 
+            }
+        if($usertype == 'user')
+            {
+            $tasks = Task::all();
+            $vehicles = Vehicle::all();
+            $user = Auth::user();
+            $clients = $user->client;
+            $services = Service::all();
+            }
+             
+        return view('report.index')->with('clients', $clients)->with('vehicles',$vehicles)->with('services',$services);;
+          //dd($entries = DB::table("entries")->get(["vehicle","created_at","service"]));
     }
 
     /**
@@ -114,85 +114,45 @@ class ReportController extends Controller
     }
 
     public function getVehicles(Request $request, $client)    
-    {    
-        $usertype = auth()->user()->usertype;
-        if($usertype == 'admin')
-        {
-            $vehicles = Vehicle::where('plate',$request->get('vehicle'));
-         if($request->startingDate)
-            {
+    {
+        $client = Client::where('name',$client)->first();
+        $vehicles = $client->vehicles;
+        
+        if($request->startingDate){
             $startingDate = Carbon::parse($request->startingDate);
             $vehicles = $vehicles->where('created_at', '>=',$startingDate);
-            }
-        if($request->endingDate)
-            {
+        }
+
+        if($request->endingDate){
             $endingDate = Carbon::parse($request->endingDate);
             $vehicles = $vehicles->where('created_at', '<=',$endingDate);
-            }
-            $vehicles = $vehicles->pluck("client_id","plate");
         }
-        if($usertype == 'user')
-        {
-            $client = Client::where('name',$client)->first();
-            $vehicles = $client->vehicles;
-         if($request->startingDate)
-            {
-            $startingDate = Carbon::parse($request->startingDate);
-            $vehicles = $vehicles->where('created_at', '>=',$startingDate);
-            }
-         if($request->endingDate){
-            $endingDate = Carbon::parse($request->endingDate);
-            $vehicles = $vehicles->where('created_at', '<=',$endingDate);
-            }
-            $vehicles = $vehicles->pluck("client_id","plate");
-        }
-   
+        $vehicles = $vehicles->pluck("client_id","plate");
         return json_encode($vehicles);
     }
     public function getEntries(Request $request, $plate)    
-    {  
-        $usertype = auth()->user()->usertype;
-        if($usertype == 'admin')
-        {
-            $entries = Entry::where('vehicle',$request->get('service'));
-        if($request->startingDate)
-            {
-            $startingDate = Carbon::parse($request->startingDate);
-             $entries = $entries->where('created_at', '>=',$startingDate);
-            }
-        if($request->endingDate)
-            {
-            $endingDate = Carbon::parse($request->endingDate);
-            $entries = $entries->where('created_at', '<=',$endingDate);
-            }
-            $entries = $entries->pluck("vehicle_id","service");
-        }
+    {
+        $vehicle = Vehicle::where('plate',$plate)->first();
+        $entries = $vehicle->entries;
 
-        if($usertype == 'user')
-        {
-            $vehicle = Vehicle::where('plate',$plate)->first();
-            $entries = $vehicle->entries;
-        if($request->startingDate)
-           {
+        if($request->startingDate){
             $startingDate = Carbon::parse($request->startingDate);
             $entries = $entries->where('created_at', '>=',$startingDate);
-           }
-        if($request->endingDate)
-           {
+        }
+
+        if($request->endingDate){
             $endingDate = Carbon::parse($request->endingDate);
             $entries = $entries->where('created_at', '<=',$endingDate);
-           }
-           $entries = $entries->pluck("vehicle_id","service");
-           }
-       
+        }
+
+        $entries = $entries->pluck("vehicle_id","service");
             //dd($entries = DB::table("entries")->get(["vehicle","created_at","service"]));
         return json_encode($entries);
           
     }
 
     public function calculateSum(Request $request, $plate)    
-    {    
-       
+    {
         $vehicle = Vehicle::where('plate',$plate)->first();
         $entries = DB::table('entries')
                 ->select('service', DB::raw('sum(amount) as totalAmount'))
