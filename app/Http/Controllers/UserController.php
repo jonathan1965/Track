@@ -48,7 +48,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        User::create($request->all());
+        $client = Client::where('name',$request->client)->first();
+        User::create([
+            'client_id' => $client->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'usertype' => $request->usertype
+        ]);
         return back()->with('success','User created');
     }
 
