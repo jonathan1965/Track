@@ -29,7 +29,7 @@
                 <td>{{$user->name}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->client->name}}</td>
-                <td> <b> {{$user->usertype}}</b></td>
+                <td class="text-uppercase"> <b> {{$user->usertype}}</b></td>
                 <td> 
                  
                   <button type="button" class="btn btn-primary-outline  btn-sm" data-myname="{{$user->name}}" data-myclient="{{$user->client}}" data-usertp={{$user->usertype}}  data-user_id={{$user->id}}  data-toggle="modal" data-target="#edit">

@@ -76,8 +76,8 @@ class TaskController extends Controller
            if($usertype == 'admin')
            {
             
-            $client = Client::where('name',$request->get('client'))->first();
-            $vehicle = Vehicle::where('plate',$request->get('vehicle'))->first();
+            $client = Client::where('name',$request->get('clients'))->first();
+            $vehicle = Vehicle::where('plate',$request->get('vehicles'))->first();
             $tasks = new Task();
             
             $tasks->vehicle_id = $vehicle->id;
