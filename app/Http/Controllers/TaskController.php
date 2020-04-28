@@ -27,13 +27,10 @@ class TaskController extends Controller
             $users = User::all();
             $vehicles = Vehicle::all();
             $tasks = Task::all();
-
-            // foreach($tasks as $task)
-
-            // {
-            //     return $task->vehicle;
-            // }
+            $clients = Client::all();
             
+            return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles)
+                                ->withUsertype($usertype)->withClients($clients);
         }
         if($usertype == 'user')
         {
@@ -42,12 +39,13 @@ class TaskController extends Controller
             $vehicles = $client->vehicles;
             $users = User::all();
             $tasks = $client->tasks;
+            return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles)
+                                ->withUsertype($usertype);
         }
         if($usertype == 'other')
         {
             return view('other');
         }
-        return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles);
     }
 
     /**
@@ -77,7 +75,7 @@ class TaskController extends Controller
            {
             
             $client = Client::where('name',$request->get('client'))->first();
-            $vehicle = Vehicle::where('plate',$request->get('vehicle'))->first();
+            $vehicle = Vehicle::where('plate',$request->get('vehicles'))->first();
             $tasks = new Task();
             
             $tasks->vehicle_id = $vehicle->id;
