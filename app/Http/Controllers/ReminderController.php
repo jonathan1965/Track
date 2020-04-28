@@ -142,7 +142,18 @@ class ReminderController extends Controller
         
 
         $reminder = Reminder::findOrFail($request->rem_id);
-        $reminder->update($request->all());
+        $client = Client::where('name',$request->client)->first();
+        $vehicle = Vehicle::where('plate',$request->vehicle)->first();
+        $reminder->update([
+            'client_id' => $client->id,
+            'vehicle_id' => $vehicle->id,
+            'topic' => $request->topic,
+            'reminder_by' => $request->reminder_by,
+            'reminder_to' => $request->reminder_to,
+            'status' => $request->status,
+            'due_date' => $request->due_date,
+            'odometer' => $request->odometer
+        ]);
        
         return back()->with('success', 'edited successfully');
     }
