@@ -4,9 +4,7 @@ use App\Service;
 use App\Client;
 use App\Task;
 use App\Entry;
-    
-    
-    
+  
 ?>
 {{-- @if(Auth::user()->usertype == 'admin' || 'user') --}}
 @extends('layouts.app')

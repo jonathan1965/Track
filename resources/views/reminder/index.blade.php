@@ -44,7 +44,7 @@
                 
                 <td style="text-align: center; width:10%;"> 
                  
-                  <button style=" width:40%;" type="button" class=" btn-primary-outline" data-rem_id='{{$reminder->id}}' data-mytopic='{{$reminder->topic}}'  data-myreminder_by='{{$reminder->reminder_by}}' data-myreminder_to='{{$reminder->reminder_to}}' data-myclient='{{$reminder->client}}' data-myvehicle='{{$reminder->vehicle}}' data-mystatus='{{$reminder->status}}' data-mydue_date='{{$reminder->due_date}}' data-myodometer='{{$reminder->odometer}}' data-rem_id='{{$reminder->id}}' data-toggle="modal" data-target="#edit">
+                  <button style=" width:40%;" type="button" class=" btn-primary-outline" data-rem_id='{{$reminder->id}}' data-mytopic='{{$reminder->topic}}'  data-myreminder_by='{{$reminder->reminder_by}}' data-myreminder_to='{{$reminder->reminder_to}}' data-myclient='{{$reminder->client->name}}' data-myvehicle='{{$reminder->vehicle->plate}}' data-mystatus='{{$reminder->status}}' data-mydue_date='{{$reminder->due_date}}' data-myodometer='{{$reminder->odometer}}' data-rem_id='{{$reminder->id}}' data-toggle="modal" data-target="#edit">
                     <i class="fa fa-edit text-success"></i> 
                   </button>
                   
@@ -98,19 +98,17 @@
                       <div class="form-group">
                         <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                         <select class="form-control" name="client" id="client">
-                          <option disabled="" selected="">Choose Option</option>
-                        
-                        <option value="{{$client->name}}">{{$client->name}}</option>
-                          
+                            @if (Auth::user()->usertype == 'admin')
+                            @foreach($client as $clients)
+                            <option value="{{$clients->name}}">{{$clients->name}}</option>
+                            @endforeach
+                            @else
+                            <option value="{{$client->name}}"> {{$client->name}}</option>
+                            @endif
                         </select>
                       </div>
-                      
-                     
-                      
-                  
                       </div>
-
-                          
+   
                      <div  class="col-7">
 
                       <div class="form-group">
@@ -153,36 +151,7 @@
               </div>
             </div>
           </div>
-          {{-- <div class="modal fade" id="reminder-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="staticBackdropLabel">Reminders</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <p>You have</p>
-                  <p>{{$expiredReminders}} expired reminders</p>
-                  <p>{{$remindersDueToday}} reminders due today</p>
-                  <p>{{$expiredReminders}} reminders due today</p>
-                  <p>{{$expiredReminders}} reminders due today</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Understood</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->  --}}
-
-
-
-
-
+       
        {{-- Edit reminderj --}}
 
 
@@ -220,11 +189,14 @@
                   <div class="form-group">
                     <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                     <select class="form-control" name="client" id="client">
-                      <option disabled="" selected="">Choose Option</option>
-                    
-                    <option value="{{$client->name}}">{{$client->name}}</option>
-                    
-                    </select>
+                      @if (Auth::user()->usertype == 'admin')
+                      @foreach($client as $clients)
+                      <option value="{{$clients->name}}">{{$clients->name}}</option>
+                      @endforeach
+                      @else
+                      <option value="{{$client->name}}"> {{$client->name}}</option>
+                      @endif
+                  </select>
                   </div>
                   </div>
 

@@ -27,20 +27,25 @@ class VehiclesController extends Controller
      */
     public function index()
     {
-        $client = auth()->user()->client;
-        // $vehicles = DB::table('vehicles')->leftJoin('tasks', 'vehicles.id', '=', 'tasks.vehicle_id')->select('vehicles.*', 'tasks.status')->where('vehicles.client', $client)->get();
+       $client = auth()->user()->client;
+       $usertype = auth()->user()->usertype;
+    if( $usertype == 'admin')
+    {     
+   
+        $clients = client::all();
+        $vehicles = Vehicle::all();
+    }
+    if($usertype == 'user')
+    {
         $user = Auth::user();
         $clients = $user->client;
         $vehicles = Vehicle::where('client_id',$clients->id)->get();
-        $usertype = auth()->user()->usertype;
-         if($usertype == 'admin' || $usertype == 'user'){     
-            
-            return view('vehicles.index')->with('vehicles', $vehicles)->with('clients', $clients);
-        }
-        else{
-            return view('other');
-        }
-        
+    }
+    if( $usertype == 'other')
+    {
+        return view('other');
+    }
+        return view('vehicles.index')->with('vehicles', $vehicles)->with('clients', $clients);
     }
 
     /**
@@ -62,6 +67,7 @@ class VehiclesController extends Controller
     public function store(Request $request)
     {
         //
+        $usertype = auth()->user()->usertype;
         $this->validate($request, [
             'type' => 'required',
             'plate' => 'bail|required|unique:vehicles|max:255',
@@ -69,14 +75,29 @@ class VehiclesController extends Controller
             'file' => 'image|nullable|max:1999', 
 
         ]);
-        $client = Client::where('name',$request->client)->first();
-        $vechicle = Vehicle::create([
-            'client_id' => $client->id,
-            'type' => $request->type,
-            'make' => $request->make,
-            'model' => $request->model,
-            'plate' => $request->plate
-        ]);
+        if($usertype == 'admin') 
+        {
+            $client = Client::where('name',$request->get('client'))->first();
+            $vechicle = Vehicle::create([
+                'client_id' => $client->id,
+                'type' => $request->type,
+                'make' => $request->make,
+                'model' => $request->model,
+                'plate' => $request->plate
+            ]);
+        }
+        if($usertype == 'user')
+        {
+            $client = Client::where('name',$request->client)->first();
+            $vechicle = Vehicle::create([
+                'client_id' => $client->id,
+                'type' => $request->type,
+                'make' => $request->make,
+                'model' => $request->model,
+                'plate' => $request->plate
+            ]);
+        }
+        
         // Vehicle::create($request->all());
         return back()->with('success', 'Vehicle saved successfully!');
     }
@@ -92,7 +113,7 @@ class VehiclesController extends Controller
         //
         $vehicle = Vehicle::find($id);
         $tasks = $vehicle->tasks;
-        return view('vehicles.show')->with('tasks', $vehicle->tasks);
+        return view('vehicles.show')->with('tasks', $tasks);
     }
 
     /**

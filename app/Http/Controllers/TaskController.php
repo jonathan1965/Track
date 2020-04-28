@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Task;
 use App\User;
+use App\Client;
 use App\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,22 +19,35 @@ class TaskController extends Controller
      */
     public function index()
     {   
-        $user = auth()->user();
-        $client = $user->client;
-        $vehicles = $client->vehicles;
-        $users = User::all();
-        $clientUsers = DB::table('users')->where('client', $client);
-        $tasks = $client->tasks;
+      
         $usertype = auth()->user()->usertype;
-         if($usertype == 'admin'){
-            return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles);
-        }elseif($usertype == 'user'){
-            return view('task.index')->with('tasks',$tasks)->with('clientUsers',$clientUsers)->with('vehicles',$vehicles)->with('users',$users);
+         if($usertype == 'admin')
+         {
+           
+            $users = User::all();
+            $vehicles = Vehicle::all();
+            $tasks = Task::all();
+
+            // foreach($tasks as $task)
+
+            // {
+            //     return $task->vehicle;
+            // }
+            
         }
-        else{
+        if($usertype == 'user')
+        {
+            $user = auth()->user();
+            $client = $user->client;
+            $vehicles = $client->vehicles;
+            $users = User::all();
+            $tasks = $client->tasks;
+        }
+        if($usertype == 'other')
+        {
             return view('other');
         }
-        
+        return view('task.index')->with('tasks',$tasks)->with('users',$users)->with('vehicles',$vehicles);
     }
 
     /**
@@ -53,25 +67,47 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {    
+        $usertype = auth()->user()->usertype;
         $this->validate($request, [
             'task' => 'required',
             'vehicles' => 'required',
            ]);
-           $user = Auth::user();
-           $client = $user->client;
-           $vehicle = Vehicle::where('plate',$request->input('vehicles'))->first();
-           $tasks = new Task();
-        
-           $tasks->task = $request->input('task');
-           $tasks->requested_by = $request->input('requested_by');  
-           $tasks->requested_to = $request->input('requested_to'); 
-           $tasks->due_date= $request->input('due_date');
-           $tasks->closed_date= $request->input('closed_date');
-           $tasks->vehicle_id = $vehicle->id;
-           $tasks->client_id = $client->id;
-           $tasks->status=$request->input('status'); 
-           $tasks->save();
+           if($usertype == 'admin')
+           {
+            
+            $client = Client::where('name',$request->get('client'))->first();
+            $vehicle = Vehicle::where('plate',$request->get('vehicle'))->first();
+            $tasks = new Task();
+            
+            $tasks->vehicle_id = $vehicle->id;
+            $tasks->client_id = $client->id;
+            $tasks->task = $request->input('task');
+            $tasks->requested_by = $request->input('requested_by');  
+            $tasks->requested_to = $request->input('requested_to'); 
+            $tasks->due_date= $request->input('due_date');
+            $tasks->closed_date= $request->input('closed_date');
+            $tasks->status=$request->input('status'); 
+            $tasks->save();
+           }
+           if($usertype == 'user')
+           {
+            $user = Auth::user();
+            $client = $user->client;
+            $vehicle = Vehicle::where('plate',$request->input('vehicles'))->first();
+            $tasks = new Task();
+         
+            $tasks->task = $request->input('task');
+            $tasks->requested_by = $request->input('requested_by');  
+            $tasks->requested_to = $request->input('requested_to'); 
+            $tasks->due_date= $request->input('due_date');
+            $tasks->closed_date= $request->input('closed_date');
+            $tasks->vehicle_id = $vehicle->id;
+            $tasks->client_id = $client->id;
+            $tasks->status=$request->input('status'); 
+            $tasks->save();
+           }
+           
         return back()->with('success', 'Saved Successfully');
     }
 

@@ -28,7 +28,7 @@
                 <td>{{$user->id}}</td>
                 <td>{{$user->name}}</td>
                 <td>{{$user->email}}</td>
-                <td>{{$user->client}}</td>
+                <td>{{$user->client->name}}</td>
                 <td> <b> {{$user->usertype}}</b></td>
                 <td> 
                  

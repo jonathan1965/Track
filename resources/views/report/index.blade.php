@@ -11,11 +11,15 @@
               <div class="form-group">
                 <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                 <select class="form-control" name="client" id="client">
-                  <option value="" selected disabled>Choose Client</option>
                   
-                  <option value="{{$clients->name}}">{{$clients->name}}</option>
-                 
-
+                  <option value="" selected disabled>Choose Client</option>
+                  @if (Auth::user()->usertype == 'admin')
+                   @foreach ($clients as $client)
+                      <option value="{{$client->name}}">{{$client->name}}</option>
+                  @endforeach
+                  @else
+                  <option value="{{$clients->name}}">{{$clients->name}}</option> 
+                 @endif
                 </select>
               </div>
               <div class="form-group">

@@ -18,18 +18,23 @@ class ReminderController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        $client = $user->client;
-        $vehicles = $client->vehicles;
-        // $clients = Client::all();
-        $users= User::all();
-        $reminders= $client->reminders;
-      
         $usertype = auth()->user()->usertype;
-         if($usertype == 'admin' || $usertype == 'user'){
-            return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('client', $client)->with('users', $users);
+     if($usertype == 'user')
+        {
+            $user = auth()->user();
+            $client = $user->client;
+            $vehicles = $client->vehicles;
+            $users= User::all();
+            $reminders= $client->reminders;
         }
-        else{
+    if($usertype == 'admin')
+        {
+            $users = User::all();
+            $client = client::all();
+            $vehicles = vehicle::all();
+            $reminders= Reminder::orderBy('id', 'desc')->get();
+        }
+        if($usertype == 'other'){
             return view('other');
         }
         return view('reminder.index')->with('reminders',$reminders)->with('vehicles', $vehicles)->with('client', $client)->with('users', $users);
@@ -54,24 +59,47 @@ class ReminderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {    
+        $usertype = auth()->user()->usertype;
         $this->validate($request, [
             'topic' => 'required',
             'due_date' => 'required',
             'reminder_to' => 'required'
         ]);
-        $user = auth()->user();
+        
+        if($usertype == 'admin'){
+            $user =user::all();
+            $client = Client::where('name',$request->get('client'))->first();
+            $vehicle = Vehicle::where('plate',$request->get('vehicle'))->first();
+            Reminder::create([
+                'client_id' => $client->id,
+                'vehicle_id' => $vehicle->id,
+                'topic' => $request->topic,
+                'reminder_by' => $request->reminder_by,
+                'reminder_to' => $request->reminder_to,
+                'status' => $request->status,
+                'due_date' => $request->due_date,
+                'odometer' => $request->odometer
+            ]); 
+        }
+
+        
+        if($usertype == 'user'){
+            $user = auth()->user();
         $client = $user->client;
         $vehicle = Vehicle::where('plate',$request->vehicle)->first();
         Reminder::create([
             'client_id' => $client->id,
             'vehicle_id' => $vehicle->id,
+            'topic' => $request->topic,
             'reminder_by' => $request->reminder_by,
             'reminder_to' => $request->reminder_to,
             'status' => $request->status,
             'due_date' => $request->due_date,
             'odometer' => $request->odometer
-        ]);
+        ]); 
+        }
+       
         return back()->with('success','reminder created');
     }
 

@@ -28,8 +28,13 @@
           <div class="form-group">
             <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
             <select class="form-control" name="client" id="client">
-              <!-- <option disabled="" selected="">Choose Option</option> -->
-              <option value="{{$clients->name}}">{{$clients->name}}</option>
+              @if (Auth::user()->usertype == 'admin')
+              @foreach($clients as $client)
+              <option value="{{$client->name}}"> {{$client->name}}</option>
+              @endforeach
+              @else
+              <option value="{{$clients->name}}"> {{$clients->name}}</option>
+              @endif
             </select>
           </div>
           <div class="form-group">
@@ -174,7 +179,7 @@
               <button style=" width:40%;" class=" btn-primary-outline" data-myvehicle="{{$entry->vehicle->plate}}" data-myclient="{{$entry->client->name}}" data-myamount="{{$entry->amount}}" data-myservice="{{$entry->service}}" data-myservice_date="{{$entry->service_date}}" data-myodometer_reading="{{$entry->odometer_reading}}" data-myfuel="{{$entry->fuel}}" data-mylocation="{{$entry->location}}" data-mydriver="{{$entry->driver}}" data-catid={{$entry->id}} data-myimage="{{$entry->image}}" data-myfile="{{$entry->file}}" data-mycomments="{{$entry->comments}}"  data-toggle="modal" data-target="#edit" ><i class="fa fa-edit text-success" style="font-size:12px"></i></button>
               
               <button style="width:40%;" class=" btn-primary-outline" data-catid={{$entry->id}} data-toggle="modal" data-target="#delete"><i class="fa fa-trash text-danger" style="font-size:12px"></i></button> 
-            
+               
             </td>
             
               
@@ -246,10 +251,13 @@
               <div class="form-group">
                 <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
                 <select class="form-control" name="client" id="client">
-                  <!-- <option disabled="" selected="">Choose Option</option> -->
-              
-                  <option value="{{$clients->name}}">{{$clients->name}}</option>
-              
+                  @if (Auth::user()->usertype == 'admin')
+                  @foreach($clients as $client)
+                  <option value="{{$client->name}}"> {{$client->name}}</option>
+                  @endforeach
+                  @else
+                  <option value="{{$clients->name}}"> {{$clients->name}}</option>
+                  @endif
                 </select>
               </div>
               <div class="form-group">

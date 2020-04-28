@@ -33,30 +33,38 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $client = auth()->user()->client;
-        //
-        if(auth()->user()->usertype == 'admin'){
-            $entries = Entry::all();
-        }else{
-            $client = Client::where('id',$client->id)->first();
-            $entries = $client->entries;
-            // $entries = DB::table('entries')->where('client',$client)->get();
-        }
         
+        $locations = Location::all();
+        $userType = auth()->user()->usertype;
+        if($userType == 'admin')
+        {
+        $entries = Entry::all();
+        $services = Service::all();
+        $vehicles = Vehicle::all();
+        $clients = Client::all();
+        }
+         if($userType == 'user')
+        {
+        $client = auth()->user()->client;
+        $client = Client::where('id',$client->id)->first();
+        $entries = $client->entries;
         $user = User::where('client_id',Auth::user()->client_id)->first();
         $clients = $user->client;
         $services = Service::all();
         $vehicles = Vehicle::where('client_id',$clients->id)->get();
-        $locations = Location::all();
         $usertype = auth()->user()->usertype;
+            // $entries = DB::table('entries')->where('client',$client)->get();
+        }
         
-        if($usertype == 'admin' || $usertype == 'user'){
+        if($userType == 'other')
+        {
             // return $clients;
-            return view('entries.index')->with('entries', $entries)->with('clients', $clients)->with('services', $services)->with('vehicles', $vehicles)->with('locations', $locations);
-        }
-        else{
             return view('other');
+          
         }
+        
+            return view('entries.index')->with('entries', $entries)->with('clients', $clients)->with('services', $services)->with('vehicles', $vehicles)->with('locations', $locations);
+        
     }
         
     
@@ -79,6 +87,7 @@ class EntryController extends Controller
     public function store(Request $request)
     {
         //
+        $userType = auth()->user()->usertype;
         $this->validate($request, [
              'service' => 'required',
              'vehicle' => 'required',
@@ -122,6 +131,32 @@ class EntryController extends Controller
         }
         // Entry::create($request->all());
         // return back()->with('success', 'Saved Successfully');
+
+        if ($userType == 'admin')
+            {
+            $client = Client::where('name',$request->get('client'))->first();
+            $vehicle = Vehicle::where('plate',$request->get('vehicle'))->first();
+            $entry = new Entry();
+            
+            $entry->client_id = $client->id;
+            $entry->vehicle_id = $vehicle->id;  
+            $entry->service = $request->input('service'); 
+            $entry->location= $request->input('location');
+            $entry->comments= $request->input('comments');
+            $entry->driver=$request->input('driver'); 
+            $entry->odometer_reading= $request->input('odometer_reading');
+            $entry->fuel=$request->input('fuel');  
+            $entry->service_date= $request->input('service_date');         
+            $entry->amount = $request->input('amount');
+            $entry->invoice_number=$request->input('invoice_number');
+            $entry->driver=$request->input('driver');
+            $entry->image=$fileNameToStore;
+            $entry->file= $fileNameToStore1;
+            $entry->save();
+           }
+        
+        if ($userType == 'user')
+           {
         $client = Client::where('name',$request->client)->first();
         $vehicle = Vehicle::where('plate',$request->vehicle)->first();
         $entry = new Entry();
@@ -141,6 +176,8 @@ class EntryController extends Controller
         $entry->image=$fileNameToStore;
         $entry->file= $fileNameToStore1;
         $entry->save();
+           }
+       
         // Mail::to('email@email.com')->send(new SendMail());
         return back()->with('success', 'Saved Successfully');
     }
@@ -204,15 +241,15 @@ class EntryController extends Controller
         }
 
         if($request->hasFile('file'))
-        {
+    {
             
-            $filenameWithExt1=$request->file('file')->getClientOriginalName();
-            $filename1=pathinfo  ($filenameWithExt1,PATHINFO_FILENAME);
-            $extension1=$request->file('file')->getClientOriginalExtension();
-            $fileNameToStore1= $filename1.'_'.time().'.'. $extension1;
-            $path1= $request->file('file')->storeAs('/public/files',$fileNameToStore1);
+        $filenameWithExt1=$request->file('file')->getClientOriginalName();
+        $filename1=pathinfo  ($filenameWithExt1,PATHINFO_FILENAME);
+        $extension1=$request->file('file')->getClientOriginalExtension();
+        $fileNameToStore1= $filename1.'_'.time().'.'. $extension1;
+        $path1= $request->file('file')->storeAs('/public/files',$fileNameToStore1);
 
-        }
+    }
         $client = Client::where('name',$request->client)->first();
         $vehicle = Vehicle::where('plate',$request->vehicle)->first();
         $entry = Entry::findOrFail($request->entry_id);
@@ -231,9 +268,8 @@ class EntryController extends Controller
         $entry->image=$fileNameToStore;
         $entry->file= $fileNameToStore1;
         $entry->save();
-       
         return back()->with('success', 'edited successfully');
-    }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -242,26 +278,25 @@ class EntryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
-    {
+{
         
-         $entry = Entry::findOrFail($request->entry_id);
-         $entry->delete();
-         return back()->with('success', 'Deleted successfully');
+    $entry = Entry::findOrFail($request->entry_id);
+    $entry->delete();
+    return back()->with('success', 'Deleted successfully');
        
-    }
+}
 
     public function image($id)
-    {
-       $image= Entry::find($id);
-       return back();
+{
+    $image= Entry::find($id);
+    return back();
        
-
-    }
+}
     public function getVehicles($client)    
 {
-        $vehicles = DB::table("vehicles")->where("client",$client)->pluck("client","plate");
+    $vehicles = DB::table("vehicles")->where("client",$client)->pluck("client","plate");
       
-        return json_encode($vehicles);
+    return json_encode($vehicles);
 }
 
 }
