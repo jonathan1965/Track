@@ -87,7 +87,19 @@
 
             </div>  
            <div  class="col-7">
-            
+           @if($usertype == 'admin')
+           <div class="form-group">
+              <label for="requested_to"><i class="fa fa-user text-primary"></i> client</label>
+              <select class="form-control" name="client" id="requested_to">
+                <option disabled="" selected="">Choose Option</option>
+                
+               @foreach ($clients as $client)
+                <option value="{{$client->name}}">{{$client->name}}</option>  
+                @endforeach                 
+              
+              </select>
+            </div>
+            @endif
             <div class="form-group">
               <label for="title"><i class="fa fa-calendar text-primary"></i> due Date</label>
               <input type="date" class="form-control" name="due_date" id="due_date">
