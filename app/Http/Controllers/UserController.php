@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $vehicles = Vehicle::all();
         $clients = Client::all();
-        $users = User::all();
+        $users = User::where('usertype','!=','admin')->get();
         $usertype = auth()->user()->usertype;
         
         if($usertype == 'admin'){
