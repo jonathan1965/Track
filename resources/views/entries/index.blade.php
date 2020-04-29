@@ -29,6 +29,7 @@
             <label for="client"><i class="fas fa-user-shield text-primary"></i> Client</label>
             <select class="form-control" name="client" id="client">
               @if (Auth::user()->usertype == 'admin')
+              <option disabled="" selected="">Choose Option</option>
               @foreach($clients as $client)
               <option value="{{$client->name}}"> {{$client->name}}</option>
               @endforeach
@@ -41,9 +42,13 @@
             <label for="Type"><i class="fa fa-car text-primary"></i> Vehicle</label>
             <select class="form-control" name="vehicle" id="vehicle">
               <option disabled="" selected="">Choose Option</option>
+              @if (Auth::user()->usertype == 'admin')
+              <option value=""></option>
+              @else
               @foreach($vehicles as $vehicle)
-              <option value="{{$vehicle->plate}}"> {{$vehicle->plate}}</option>
-              @endforeach
+              <option value="{{$vehicle->plate}}">{{$vehicle->plate}}</option>
+              @endforeach    
+              @endif
             </select>
           </div>
 
@@ -97,7 +102,7 @@
           </div>
           <div class="form-group">
             <label for="title"><i class="fas fa-file-image text-primary"></i> Invoice Image</label>
-            <input type="file" class="form-control" name="image" id="location">
+            <input type="file" class="form-control" name="image" id="image">
           </div>
           </div>
           
@@ -155,6 +160,8 @@
             <th class="text-center">Fuel(L)</th>
            <th >Service Date</th>
             <th>Location</th>
+            {{-- <th>Location</th>
+            <th>Location</th> --}}
             <th>Action</th>
             
             
@@ -173,8 +180,8 @@
             <td class="text-center">{{$entry->fuel}}</td>
             <td >{{$entry->service_date}}</td>
             <td >{{$entry->location}}</td>
-            {{-- <td ><a href="public/images/{{$entry->image}}" target="_blank">{{$entry->image}}</a> </td>
-            <td > <a href="public/files/{{$entry->file}}" target="_blank">{{$entry->file}}</a> </td> --}}
+            {{-- <td ><a href="storage/images/{{$entry->image}}" target="_blank">{{$entry->image}}</a> </td>
+            <td > <a href="storage/files/{{$entry->file}}" target="_blank">{{$entry->file}}</a> </td> --}}
             <td style="text-align: center; width:10%;"> 
               <button style=" width:40%;" class=" btn-primary-outline" data-myvehicle="{{$entry->vehicle->plate}}" data-myclient="{{$entry->client->name}}" data-myamount="{{$entry->amount}}" data-myservice="{{$entry->service}}" data-myservice_date="{{$entry->service_date}}" data-myodometer_reading="{{$entry->odometer_reading}}" data-myfuel="{{$entry->fuel}}" data-mylocation="{{$entry->location}}" data-mydriver="{{$entry->driver}}" data-catid={{$entry->id}} data-myimage="{{$entry->image}}" data-myfile="{{$entry->file}}" data-mycomments="{{$entry->comments}}"  data-toggle="modal" data-target="#edit" ><i class="fa fa-edit text-success" style="font-size:12px"></i></button>
               
@@ -289,7 +296,7 @@
               </div>
               <div class="form-group">
                 <label for="title"><i class="fa fa-file text-primary"></i> File</label>
-                <input type="file" class="form-control" name="file" id="">
+                <input type="file" class="form-control" name="file" id="file">
               </div>
               </div>
              <div  class="col-7">
@@ -321,7 +328,7 @@
 
               <div class="form-group">
                 <label for="title"><i class="fas fa-file-image text-primary"></i> Invoice Image</label>
-                <input type="file" class="form-control" name="image" id="">
+                <input type="file" class="form-control" name="image" id="image">
               </div>
 
               </div>
@@ -371,6 +378,10 @@
       var fuel = button.data('myfuel')
       var location = button.data('mylocation')
       var comments = button.data('mycomments')
+
+    // var image = button.data('myimage')
+    // var file = button.data('myfile')
+          
       var driver = button.data('mydriver')
       var cat_id = button.data('catid') 
       var modal = $(this)
@@ -384,6 +395,11 @@
       modal.find('.modal-body #odometer_reading').val(odometer_reading);
       modal.find('.modal-body #fuel').val(fuel);
       modal.find('.modal-body #location').val(location);
+      
+      // modal.find('.modal-body #image').attr(image);
+      // modal.find('.modal-body #file').val(file)
+
+
       modal.find('.modal-body #comments').val(comments);
       modal.find('.modal-body #driver').val(driver);
       modal.find('.modal-body #cat_id').val(cat_id);
@@ -492,7 +508,30 @@ fixedHeader: true,
             $('#min, #max').change(function () {
                 table.draw();
             });
-        
+
+            jQuery('select[name="client"]').on('change',function(){
+               var clientID = jQuery(this).val();
+               if(clientID)
+               {
+                  jQuery.ajax({
+                     url : 'getVehicles/' +clientID,
+                     type : "GET",
+                     dataType : "json",
+                     success:function(data)
+                     {
+                        console.log(data);
+                        jQuery('select[name="vehicle"]').empty();
+                        jQuery.each(data, function(key,value){
+                           $('select[name="vehicle"]').append('<option value="'+ key +'">'+ key +''+ '</option>');
+                        });
+                     }
+                  });
+               }
+               else
+               {
+                  $('select[name="vehicle"]').empty();
+               }
+            });
             
 
 } );

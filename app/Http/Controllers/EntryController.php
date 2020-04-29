@@ -294,9 +294,12 @@ class EntryController extends Controller
 }
     public function getVehicles($client)    
 {
-    $vehicles = DB::table("vehicles")->where("client",$client)->pluck("client","plate");
+    $client = Client::where('name',$client)->first();
+    $vehicles = $client->vehicles;
+    $vehicles = $vehicles->pluck("client_id","plate");
       
     return json_encode($vehicles);
+    
 }
 
 }
