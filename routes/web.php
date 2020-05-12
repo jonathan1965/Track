@@ -31,8 +31,10 @@ Route::resource('report', 'ReportController');
 Route::get('report/getVehicles/{client}', 'ReportController@getVehicles' );
 Route::get('report/getEntries/{plate}','ReportController@getEntries');
 Route::get('report/getChartData/{plate}','ReportController@calculateSum');
+Route::get('reminder/getVehicles/{client}','ReminderController@getVehicles');
 
 
+Route::get('task/getVehicles/{client}','TaskController@getVehicles');
 Route::get('entries/getVehicles/{client}','EntryController@getVehicles');
 Route::get('/home', 'HomeController@index')->name('home');
 

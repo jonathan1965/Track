@@ -9,7 +9,8 @@ class Vehicle extends Model
     //
     protected $fillable = ['client_id', 'type', 'make', 'model', 'plate'];
 
-    public function tasks(){
+    public function tasks()
+    {
  
         return $this->hasMany(Task::class);
 

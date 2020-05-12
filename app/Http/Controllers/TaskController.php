@@ -163,4 +163,13 @@ class TaskController extends Controller
         $tasks->delete();
         return back()->with('success', 'Deleted successfully');
     }
+    public function getVehicles($client)    
+    {
+        $client = Client::where('name',$client)->first();
+        $vehicles = $client->vehicles;
+        $vehicles = $vehicles->pluck("client_id","plate");
+          
+        return json_encode($vehicles);
+        
+    }
 }
